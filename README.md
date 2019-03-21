@@ -55,4 +55,17 @@ solo_stats = playerinfo['solo'] to get the solo stats
 and then for example
 print(solo_stats['wins']) to print the amount of wins
 
-more functions for the recent matches of a user and weapon statistic lookups will come soon
+
+if you fetch a image url by using
+item = item_search.name('Ark')
+url = item['image_background'] gives you the url
+you can show to image by using
+from fortnite_easy_api import show
+you can use
+show.image(url, and specify a frame name like 'Ark')
+
+you can also print out all the details of an item by using
+
+show.info(your identifier here)
+
+more functions for the recent matches of a user and weapon statistic lookups and challenges will come soon
