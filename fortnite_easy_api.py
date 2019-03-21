@@ -1,6 +1,59 @@
 import requests
 import json
+import cv2
+from urllib.request import urlopen, Request
+import numpy as np
 
+class show():
+    def image(url, frame_name='Image'):
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.3'}
+        raw = Request(url=url, headers=headers) 
+        req = urlopen(raw)
+        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+        img = cv2.imdecode(arr, -1)
+
+        cv2.imshow(frame_name, img)
+        if cv2.waitKey() & 0xff == 27: quit()
+    def info(identifier):
+        response = requests.get('https://fortnite-public-api.theapinetwork.com/prod09/item/get?ids=' + identifier)
+        rawdata = response.content.decode()
+        item = json.loads(rawdata)
+        identifier = item['identifier']
+        if '(BUNDLE)' in item['name']:
+            name = item['name'].replace(' (BUNDLE)','')
+        else:
+            name = item['name']
+        if item['type'] == 'bundle' or item['type'] == 'outfit':
+            kind = 'outfit'
+        else:
+            kind = item['type']
+        cost = item['cost']
+        description = item['description']
+        rarity = item['rarity']
+        images = item['images']
+        image_transparent = images['transparent']
+        image_background = images['background']
+        image_info = images['information']
+        found = True
+        print('Identifier: ' + identifier)
+        print('Name: ' + name)
+        print('Type: ' + kind)
+        print('Cost: ' + str(cost))
+        print('Description: ' + description)
+        print('Image Transparend: ' + image_transparent)
+        print('Image Background: ' + image_background)
+        print('Image Info: ' + image_info)
+        result = {
+                'identifier': identifier,
+                'name': name,
+                'type': kind,
+                'rarity': rarity,
+                'cost': cost,
+                'image_transparent': image_transparent,
+                'image_background': image_background,
+                'image_info': image_info
+            }
+        return result
 class shop():
     def get(language):
         if not language:
